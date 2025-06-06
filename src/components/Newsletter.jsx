@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { supabase } from "../supabaseClient.js"; // Ensure this path is correct
+import { supabase } from "../supabaseClient.js";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  // For displaying success or error messages
   const [message, setMessage] = useState({ text: "", type: "" });
 
   const handleSubscribe = async (e) => {
@@ -13,45 +12,29 @@ function Newsletter() {
     setMessage({ text: "", type: "" }); // Reset message on new submission
 
     try {
-      // --- Step 1: Insert the email into the 'newsletter' table ---
-      const { error: insertError } = await supabase
-        .from("newsletter")
-        .insert({ email: email });
-
-      // --- Handle potential errors from the insert operation ---
-      if (insertError) {
-        // '23505' is the Postgres error code for a unique constraint violation
-        if (insertError.code === "23505") {
-          throw new Error("This email address has already been subscribed.");
-        }
-        // For any other database error
-        throw new Error("Could not subscribe. Please try again later.");
-      }
-
-      // --- Step 2: If insert is successful, invoke the Edge Function ---
-      const { data: functionData, error: functionError } =
-        await supabase.functions.invoke("send-welcome-email", {
+      // Use the Supabase client to invoke the Edge Function
+      const { data, error } = await supabase.functions.invoke(
+        "send-welcome-email", // This is the name of your function
+        {
           body: { email }, // Pass the email in the body
-        });
+        }
+      );
 
-      if (functionError) {
-        // This error happens if the function itself fails
-        throw new Error(
-          "Subscription successful, but failed to send welcome email."
-        );
+      if (error) {
+        throw error; // Throw error to be caught by the catch block
       }
 
-      // --- Set the final success message from the function ---
-      setMessage({ text: functionData.message, type: "success" });
+      // Set a success message
+      setMessage({ text: data.message, type: "success" });
       setEmail(""); // Clear the input field on success
     } catch (error) {
-      // --- Catch and display any error from the try block ---
+      // Set an error message
       setMessage({
-        text: error.message || "An unexpected error occurred.",
+        text: error.message || "An error occurred. Please try again.",
         type: "error",
       });
     } finally {
-      setLoading(false); // Stop loading state, regardless of outcome
+      setLoading(false); // Stop loading state
     }
   };
 
