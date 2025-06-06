@@ -7,10 +7,10 @@ import { useParams } from "react-router-dom";
 const servicesData = [
   {
     id: "1",
-    title: "Equipment Installation",
+    title: "Installation & Implementation",
     description:
       "We provide professional installation of all types of industrial and commercial equipment. Our certified technicians ensure that your machinery is set up for optimal performance and safety from day one.",
-    image: "/images/installation-service.jpg", // Make sure you have an image at this path in your public folder
+    image: "../assets/1742493208.png", // Make sure you have an image at this path in your public folder
   },
   {
     id: "2",
@@ -24,6 +24,13 @@ const servicesData = [
     title: "Technical Consulting",
     description:
       "Leverage our industry expertise to improve your processes. We offer consulting on equipment upgrades, workflow optimization, and energy efficiency to help you achieve your business goals.",
+    image: "/images/consulting-service.jpg", // Make sure you have an image at this path in your public folder
+  },
+  {
+    id: "4",
+    title: "Training",
+    description:
+      "Tailored training programs designed to upskill your team, enhance their expertise, and ensure they are fully equipped to leverage new tools, technologies, and processes effectively.",
     image: "/images/consulting-service.jpg", // Make sure you have an image at this path in your public folder
   },
 ];
