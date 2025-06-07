@@ -1,7 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../supabaseClient.js"; // Adjust the path if needed
 
+// --- Mock Data ---
+// In a real application, this data might come from an API, a CMS, or a Redux store.
+// We place it here to make the component work for this example.
+const servicesData = [
+  {
+    id: "1",
+    title: "Equipment Installation",
+    description:
+      "We provide professional installation of all types of industrial and commercial equipment. Our certified technicians ensure that your machinery is set up for optimal performance and safety from day one.",
+    image: "/images/installation-service.jpg", // Make sure you have an image at this path in your public folder
+  },
+  {
+    id: "2",
+    title: "Preventive Maintenance",
+    description:
+      "Our preventive maintenance plans are designed to keep your operations running smoothly and prevent costly downtime. We perform regular check-ups, lubrication, and part replacements.",
+    image: "/images/maintenance-service.jpg", // Make sure you have an image at this path in your public folder
+  },
+  {
+    id: "3",
+    title: "Technical Consulting",
+    description:
+      "Leverage our industry expertise to improve your processes. We offer consulting on equipment upgrades, workflow optimization, and energy efficiency to help you achieve your business goals.",
+    image: "/images/consulting-service.jpg", // Make sure you have an image at this path in your public folder
+  },
+];
+// --- End Mock Data ---
+
+// The component is now renamed to ServiceDetail to be more generic
 function Installation() {
   const { id } = useParams();
   const [service, setService] = useState(null);
