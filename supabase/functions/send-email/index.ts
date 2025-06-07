@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
-import logo_service from "../../../src/assets/logo_service.png"; // Adjust the path as necessary
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -27,13 +26,13 @@ serve(async (req: Request) => {
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
           status: 400,
-        }
+        },
       );
     }
 
     try {
-      const { data: userEmailData, error: userEmailError } =
-        await resend.emails.send({
+      const { data: userEmailData, error: userEmailError } = await resend.emails
+        .send({
           from: `Your Company <${SENDER_EMAIL}>`,
           to: [email],
           subject: "Thank You for Your Message!",
@@ -41,7 +40,7 @@ serve(async (req: Request) => {
           <div style="background:#f4f8fb;padding:40px 0;">
             <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.07);padding:32px 28px;font-family:'Segoe UI',Arial,sans-serif;">
               <div style="text-align:center;">
-                <img src=${logo_service} alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
+                <img src="https://ossbzkgjbjufyefupkzo.supabase.co/storage/v1/object/sign/logo/logo_service.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mY2ZiZmU1Mi05MWRhLTQzNzctODgwYS1lZjk3OTQ3NTY3NDYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL2xvZ29fc2VydmljZS5wbmciLCJpYXQiOjE3NDkzMTg0NjEsImV4cCI6MTQwMTYxNzM1MzAyNDYxfQ.R77F_3-HcuNqsSVoEcNVPYR0jpFQAJU7zXWWcL573j4" alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
                 <h2 style="color:#2563eb;margin-bottom:8px;">Thank You, ${name}!</h2>
                 <p style="color:#333;font-size:17px;margin-bottom:24px;">
                   We have received your message and will get back to you as soon as possible.
@@ -59,14 +58,14 @@ serve(async (req: Request) => {
                     <td>${email}</td>
                   </tr>
                   ${
-                    phone
-                      ? `
+            phone
+              ? `
                   <tr>
                     <td style="padding:4px 0;"><strong>Phone:</strong></td>
                     <td>${phone}</td>
                   </tr>`
-                      : ""
-                  }
+              : ""
+          }
                   <tr>
                     <td style="padding:4px 0;vertical-align:top;"><strong>Message:</strong></td>
                     <td>${message.replace(/\n/g, "<br>")}</td>
@@ -89,7 +88,7 @@ serve(async (req: Request) => {
       if (userEmailError) {
         console.error(
           "Error sending confirmation email to user:",
-          userEmailError
+          userEmailError,
         );
       } else {
         console.log("Confirmation email sent to user:", userEmailData);
@@ -98,8 +97,8 @@ serve(async (req: Request) => {
       console.error("Unexpected error during user email send:", sendError);
     }
     try {
-      const { data: adminEmailData, error: adminEmailError } =
-        await resend.emails.send({
+      const { data: adminEmailData, error: adminEmailError } = await resend
+        .emails.send({
           from: `Contact Form <${SENDER_EMAIL}>`,
           to: [ADMIN_EMAIL],
           subject: `New Contact Form Submission from ${name}`,
@@ -107,7 +106,7 @@ serve(async (req: Request) => {
           <div style="background:#f4f8fb;padding:40px 0;">
             <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.07);padding:32px 28px;font-family:'Segoe UI',Arial,sans-serif;">
               <div style="text-align:center;">
-                <img src=${logo_service} alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
+                <img src="https://ossbzkgjbjufyefupkzo.supabase.co/storage/v1/object/sign/logo/logo_service.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mY2ZiZmU1Mi05MWRhLTQzNzctODgwYS1lZjk3OTQ3NTY3NDYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL2xvZ29fc2VydmljZS5wbmciLCJpYXQiOjE3NDkzMTg0NjEsImV4cCI6MTQwMTYxNzM1MzAyNDYxfQ.R77F_3-HcuNqsSVoEcNVPYR0jpFQAJU7zXWWcL573j4" alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
                 <h2 style="color:#2563eb;margin-bottom:8px;">New Contact Form Submission</h2>
                 <p style="color:#333;font-size:17px;margin-bottom:24px;">
                   You have received a new message from your website contact form.
@@ -125,14 +124,14 @@ serve(async (req: Request) => {
                     <td>${email}</td>
                   </tr>
                   ${
-                    phone
-                      ? `
+            phone
+              ? `
                   <tr>
                     <td style="padding:4px 0;"><strong>Phone:</strong></td>
                     <td>${phone}</td>
                   </tr>`
-                      : ""
-                  }
+              : ""
+          }
                   <tr>
                     <td style="padding:4px 0;vertical-align:top;"><strong>Message:</strong></td>
                     <td>${message.replace(/\n/g, "<br>")}</td>
@@ -152,7 +151,7 @@ serve(async (req: Request) => {
       if (adminEmailError) {
         console.error(
           "Error sending admin notification email:",
-          adminEmailError
+          adminEmailError,
         );
         // Log for debugging
       } else {
@@ -167,7 +166,7 @@ serve(async (req: Request) => {
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
-      }
+      },
     );
   } catch (error) {
     const errorMessage =

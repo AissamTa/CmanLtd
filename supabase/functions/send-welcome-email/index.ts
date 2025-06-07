@@ -83,7 +83,7 @@ serve(async (req) => {
                 <tr>
                   <td class="sm-py-32 sm-px-24" style="background-color: #ffffff; padding: 48px; text-align: center; border-radius: 12px 12px 0 0;">
                     <a href="https://your-website.com">
-                      <img src="https://i.postimg.cc/q7LzT8T3/cman-logo-placeholder.png" width="100" alt="CMAN Ltd Logo" style="border: 0; max-width: 100%; vertical-align: middle; line-height: 100%; margin-bottom: 32px;">
+                      <img src="#" width="100" alt="CMAN Ltd Logo" style="border: 0; max-width: 100%; vertical-align: middle; line-height: 100%; margin-bottom: 32px;">
                     </a>
                   </td>
                 </tr>
@@ -101,7 +101,7 @@ serve(async (req) => {
                     <table align="center" cellpadding="0" cellspacing="0" role="presentation">
                       <tr>
                         <td class="hover-bg-blue-700" style="background-color: #2563eb; border-radius: 8px;">
-                          <a href="https://your-website.com/services" target="_blank" style="display: inline-block; padding: 14px 24px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;">
+                          <a href="https://cman.ma" target="_blank" style="display: inline-block; padding: 14px 24px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none;">
                             Explore Our Services &rarr;
                           </a>
                         </td>
@@ -119,7 +119,7 @@ serve(async (req) => {
                       <a href="#" target="_blank" style="margin-right: 12px; color: #6b7280; text-decoration: none;">Twitter</a>
                       <a href="#" target="_blank" style="color: #6b7280; text-decoration: none;">LinkedIn</a>
                     </p>
-                    <p style="margin: 0; margin-bottom: 8px;">CMAN Ltd, 123 Industrial Way, Kenitra, Morocco</p>
+                    <p style="margin: 0; margin-bottom: 8px;">CMAN Ltd,Tangier, Morocco</p>
                     <p style="margin: 0;">
                       Don't want to receive these emails? <a href="#" target="_blank" style="color: #2563eb; text-decoration: none;">Unsubscribe</a>.
                     </p>
