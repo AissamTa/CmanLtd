@@ -89,7 +89,7 @@ function Contact() {
 
       // Your provided fetch call integrated here:
       const emailResponse = await fetch(
-        `https://btjskuammsxowuetpasz.supabase.co/functions/v1/send-email`,
+        `https://ossbzkgjbjufyefupkzo.supabase.co/functions/v1/send-email`,
         {
           method: "POST",
           headers: {
