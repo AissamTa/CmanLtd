@@ -1,23 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@3.2.0";
-
-// --- CONFIGURATION ---
-// !!! IMPORTANT !!!
-// 1. Replace this with the email address you have verified in your Resend account.
-// 2. This is the "From" address the user will see.
 const RESEND_FROM_EMAIL = "contact@cman.ma";
 
-// --- CORS HEADERS ---
-// These headers are required to allow your website to call this function from a browser.
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*", // For production, you should replace * with your website's domain (e.g., "https://www.cman-ltd.com")
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
 
-// --- EDGE FUNCTION LOGIC ---
 serve(async (req) => {
-  // This is a preflight request. It's a security check browsers make before sending a POST request.
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }

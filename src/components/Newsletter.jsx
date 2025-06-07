@@ -9,19 +9,25 @@ function Newsletter() {
   const handleSubscribe = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage({ text: "", type: "" }); // Reset message on new submission
+    setMessage({ text: "", type: "" });
 
     try {
-      // Use the Supabase client to invoke the Edge Function
+      const { error: insertError } = await supabase
+        .from("newsletter")
+        .insert({ email: email }, { returning: "minimal" });
+
+      if (insertError) {
+        throw insertError;
+      }
       const { data, error } = await supabase.functions.invoke(
-        "send-welcome-email", // This is the name of your function
+        "send-welcome-email",
         {
-          body: { email }, // Pass the email in the body
+          body: { email },
         }
       );
 
       if (error) {
-        throw error; // Throw error to be caught by the catch block
+        throw error;
       }
 
       // Set a success message

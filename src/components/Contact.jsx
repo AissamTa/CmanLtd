@@ -9,9 +9,9 @@ function Contact() {
     message: "",
   });
   const [errors, setErrors] = useState({});
-  const [_successMessage, _setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // Rename for clarity
   const [isLoading, setIsLoading] = useState(false);
-  const [_emailStatus, setEmailStatus] = useState(""); // State for email sending status
+  const [emailStatus, setEmailStatus] = useState(""); // State for email sending status
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +48,7 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    _setSuccessMessage("");
+    setSuccessMessage(""); // Use the renamed setter
     setErrors({});
     setEmailStatus(""); // Clear email status
 
@@ -81,7 +81,7 @@ function Contact() {
         return;
       }
 
-      _setSuccessMessage("Your message has been saved successfully!");
+      setSuccessMessage("Your message has been sent successfully!"); // Use the renamed setter
       setFormData({ name: "", email: "", phone: "", message: "" }); // Clear form fields on success
 
       // 2. Invoke Supabase Edge Function to send email
@@ -136,12 +136,17 @@ function Contact() {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
             Contact Us
           </h2>
-          {/* Optionally, add a subtitle or description here */}
-          {/* <p className="text-center text-gray-700 text-lg mb-10">We'd love to hear from you!</p> */}
 
           {/* ...move your existing content here... */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-1">
+              {/* Success Message */}
+              {successMessage && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
+                  {successMessage}
+                </div>
+              )}
+              {/* Error Messages */}
               {Object.keys(errors).length > 0 && !errors.general && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
                   <ul className="list-disc list-inside">

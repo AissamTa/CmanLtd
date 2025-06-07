@@ -21,8 +21,8 @@ export default function Header() {
                 alt="CMAN Ltd Logo"
                 className="w-12 h-12 rounded-full shadow-md"
               />
-              <span class="text-2xl font-bold text-[#0d1b3f] tracking-tight">
-                CMAN <span class="font-medium">Ltd</span>
+              <span className="text-2xl font-bold text-[#0d1b3f] tracking-tight">
+                CMAN <span className="font-medium">Ltd</span>
               </span>
             </Link>
           </div>

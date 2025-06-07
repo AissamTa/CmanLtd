@@ -40,7 +40,7 @@ serve(async (req: Request) => {
           <div style="background:#f4f8fb;padding:40px 0;">
             <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.07);padding:32px 28px;font-family:'Segoe UI',Arial,sans-serif;">
               <div style="text-align:center;">
-                <img src="https://ossbzkgjbjufyefupkzo.supabase.co/storage/v1/object/sign/logo/logo_service.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mY2ZiZmU1Mi05MWRhLTQzNzctODgwYS1lZjk3OTQ3NTY3NDYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL2xvZ29fc2VydmljZS5wbmciLCJpYXQiOjE3NDkzMTg0NjEsImV4cCI6MTQwMTYxNzM1MzAyNDYxfQ.R77F_3-HcuNqsSVoEcNVPYR0jpFQAJU7zXWWcL573j4" alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
+                <img src="#" />
                 <h2 style="color:#2563eb;margin-bottom:8px;">Thank You, ${name}!</h2>
                 <p style="color:#333;font-size:17px;margin-bottom:24px;">
                   We have received your message and will get back to you as soon as possible.
@@ -106,7 +106,7 @@ serve(async (req: Request) => {
           <div style="background:#f4f8fb;padding:40px 0;">
             <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.07);padding:32px 28px;font-family:'Segoe UI',Arial,sans-serif;">
               <div style="text-align:center;">
-                <img src="https://ossbzkgjbjufyefupkzo.supabase.co/storage/v1/object/sign/logo/logo_service.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mY2ZiZmU1Mi05MWRhLTQzNzctODgwYS1lZjk3OTQ3NTY3NDYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvL2xvZ29fc2VydmljZS5wbmciLCJpYXQiOjE3NDkzMTg0NjEsImV4cCI6MTQwMTYxNzM1MzAyNDYxfQ.R77F_3-HcuNqsSVoEcNVPYR0jpFQAJU7zXWWcL573j4" alt="CMAN Ltd" style="width:80px;margin-bottom:16px;" />
+                <img src="#" />
                 <h2 style="color:#2563eb;margin-bottom:8px;">New Contact Form Submission</h2>
                 <p style="color:#333;font-size:17px;margin-bottom:24px;">
                   You have received a new message from your website contact form.
