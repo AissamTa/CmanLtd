@@ -19,6 +19,11 @@ export default function AboutHome() {
               partnerships within the manufacturing industry that drive
               efficiency, innovation and growth on the factory floor.
             </p>
+            <p className="mt-4 text-steel leading-relaxed">
+              From line installation to operator training, process optimization
+              and industrial recruitment, we bring the method and the people to
+              turn your plant's capacity into reliable output.
+            </p>
             <Link
               to="/about"
               className="mt-7 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink text-white font-semibold hover:bg-ink/90 transition"
