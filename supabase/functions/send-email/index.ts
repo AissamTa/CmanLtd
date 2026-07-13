@@ -1,23 +1,55 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+
+// --- Security: origin allowlist (extend via ALLOWED_ORIGINS env, comma-separated) ---
+const DEFAULT_ORIGINS = [
+  "https://cman.ma",
+  "https://www.cman.ma",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+const EXTRA_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") ?? "")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+const ALLOWED_ORIGINS = [...DEFAULT_ORIGINS, ...EXTRA_ORIGINS];
+
+function corsHeadersFor(req: Request): Record<string, string> {
+  const origin = req.headers.get("Origin") ?? "";
+  const allowed = ALLOWED_ORIGINS.includes(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed ? origin : ALLOWED_ORIGINS[0],
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type",
+  };
+}
+
+// --- Security: escape user input before injecting into HTML emails ---
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "cmanltd7@gmail.com";
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 
 serve(async (req: Request) => {
+  const corsHeaders = corsHeadersFor(req);
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { name, email, phone, message } = await req.json();
+    const body = await req.json();
+    const name = escapeHtml(body.name).slice(0, 120);
+    const email = escapeHtml(body.email).slice(0, 254);
+    const phone = body.phone ? escapeHtml(body.phone).slice(0, 30) : null;
+    const message = escapeHtml(body.message).slice(0, 5000);
 
     // Basic validation
     if (!name || !email || !message) {
