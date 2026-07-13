@@ -1,3 +1,124 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --ink: #0d1b3f;
+  --steel: #4a5878;
+  --signal: #ff5a1f;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 24px 60px -24px rgba(13, 27, 63, 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply font-body text-ink bg-porcelain antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display;
+}
+
+/* ---------- Glass surfaces ---------- */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-soft {
+  background: rgba(255, 255, 255, 0.38);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 16px 40px -20px rgba(13, 27, 63, 0.18);
+}
+
+/* Sheen highlight across glass edges */
+.glass-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.glass-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0) 70%,
+    rgba(255, 255, 255, 0.35) 100%
+  );
+  opacity: 0.5;
+}
+
+/* ---------- Engineering-paper grid backdrop ---------- */
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(13, 27, 63, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 27, 63, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Ambient color orbs behind the glass */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+/* ---------- 3D scene ---------- */
+.scene {
+  perspective: 1400px;
+}
+.scene-group {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+.card-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.float-slow { animation: floatY 7s ease-in-out infinite; }
+.float-slower { animation: floatY 9s ease-in-out 1.2s infinite; }
+
+/* Service card lift */
+.tilt-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.tilt-card:hover {
+  transform: translateY(-8px) rotateX(4deg) rotateY(-4deg);
+  box-shadow: 0 32px 70px -28px rgba(13, 27, 63, 0.32);
+}
+
+/* Machine-plate label */
+.plate {
+  @apply font-mono text-[11px] tracking-[0.18em] uppercase text-steel;
+}
+
+/* Focus visibility */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-slow, .float-slower { animation: none; }
+  .scene-group, .tilt-card { transition: none; }
+  html { scroll-behavior: auto; }
+}
