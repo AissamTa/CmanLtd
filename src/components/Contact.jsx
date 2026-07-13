@@ -1,6 +1,10 @@
 // src/pages/ContactPage.jsx
 import React, { useState } from "react";
-import { supabase } from "../supabaseClient.js"; // Import your Supabase client
+import {
+  supabase,
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+} from "../supabaseClient.js"; // Import your Supabase client
 function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -89,15 +93,15 @@ function Contact() {
 
       // Your provided fetch call integrated here:
       const emailResponse = await fetch(
-        `https://ossbzkgjbjufyefupkzo.supabase.co/functions/v1/send-email`,
+        `${SUPABASE_URL}/functions/v1/send-email`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             // Use your Supabase Anon Key for authentication.
             // These headers are essential for the Edge Function to recognize the request.
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({
             name: formData.name,
