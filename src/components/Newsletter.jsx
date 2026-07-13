@@ -19,6 +19,8 @@ function Newsletter() {
       if (insertError) {
         throw insertError;
       }
+      // The subscription is already saved; the welcome email is best-effort
+      // and must not surface an error to the subscriber if it fails.
       const { data, error } = await supabase.functions.invoke(
         "send-welcome-email",
         {
@@ -27,11 +29,14 @@ function Newsletter() {
       );
 
       if (error) {
-        throw error;
+        console.error("Welcome email failed:", error);
       }
 
       // Set a success message
-      setMessage({ text: data.message, type: "success" });
+      setMessage({
+        text: data?.message || "Subscription successful!",
+        type: "success",
+      });
       setEmail(""); // Clear the input field on success
     } catch (error) {
       // Set an error message
