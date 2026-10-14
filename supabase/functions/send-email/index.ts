@@ -35,8 +35,9 @@ function escapeHtml(value: unknown): string {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const resend = new Resend(RESEND_API_KEY);
-// Inbox that receives every contact-form submission.
-const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "aissamtaouili39@gmail.com";
+// Inbox that receives every contact-form submission. Fixed on purpose: an old
+// ADMIN_EMAIL secret was overriding it. To change the inbox, edit this line.
+const ADMIN_EMAIL = "aissamtaouili39@gmail.com";
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 // Resend's shared test sender. It works without a verified domain, but can
 // only deliver to the email address that owns the Resend account.
