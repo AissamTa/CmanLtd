@@ -67,12 +67,14 @@ export default function Footer() {
               </li>
               <li>
                 <i className="fa fa-mobile mr-2" aria-hidden="true"></i>
-                +212 700000827
+                <a href="tel:+212663436494" className="hover:underline">
+                  06 63 43 64 94
+                </a>
               </li>
               <li>
                 <i className="fa fa-envelope mr-2" aria-hidden="true"></i>
-                <a href="mailto:contact@cman.ma" className="hover:underline">
-                  contact@cman.ma
+                <a href="mailto:cmanltd7@gmail.com" className="hover:underline">
+                  cmanltd7@gmail.com
                 </a>
               </li>
             </ul>

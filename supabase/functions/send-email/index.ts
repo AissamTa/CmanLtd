@@ -38,6 +38,10 @@ const resend = new Resend(RESEND_API_KEY);
 // Inbox that receives every contact-form submission. Fixed on purpose: an old
 // ADMIN_EMAIL secret was overriding it. To change the inbox, edit this line.
 const ADMIN_EMAIL = "aissamtaouili39@gmail.com";
+// Extra inbox that also gets a copy. Sent separately so a failure here never
+// blocks the main notification (Resend test mode only delivers to the account
+// owner until the cman.ma domain is verified).
+const EXTRA_ADMIN_EMAILS = ["cmanltd7@gmail.com"];
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 // Resend's shared test sender. It works without a verified domain, but can
 // only deliver to the email address that owns the Resend account.
@@ -170,10 +174,9 @@ serve(async (req: Request) => {
     // The notification to your inbox is the email that matters: if it fails,
     // report the real reason to the page instead of pretending it worked.
     let adminError: string | null = null;
-    try {
-      const { data: adminEmailData, error: adminEmailError } = await sendEmail({
+    const sendAdmin = (to: string) => sendEmail({
           fromName: "Contact Form",
-          to: [ADMIN_EMAIL],
+          to: [to],
           // Hitting "Reply" in your inbox answers the visitor directly.
           reply_to: String(body.email ?? "").slice(0, 254),
           subject: `New Contact Form Submission from ${name}`,
@@ -223,6 +226,9 @@ serve(async (req: Request) => {
           `,
         });
 
+    try {
+      const { data: adminEmailData, error: adminEmailError } = await sendAdmin(ADMIN_EMAIL);
+
       if (adminEmailError) {
         console.error(
           "Error sending admin notification email:",
@@ -235,6 +241,16 @@ serve(async (req: Request) => {
     } catch (sendError) {
       console.error("Unexpected error during admin email send:", sendError);
       adminError = sendError instanceof Error ? sendError.message : String(sendError);
+    }
+
+    for (const extra of EXTRA_ADMIN_EMAILS) {
+      try {
+        const { error } = await sendAdmin(extra);
+        if (error) console.error(`Copy to ${extra} failed:`, error);
+        else console.log(`Copy sent to ${extra}`);
+      } catch (e) {
+        console.error(`Copy to ${extra} failed:`, e);
+      }
     }
 
     if (adminError) {
