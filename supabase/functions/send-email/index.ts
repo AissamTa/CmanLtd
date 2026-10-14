@@ -33,9 +33,37 @@ function escapeHtml(value: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "cmanltd7@gmail.com";
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const resend = new Resend(RESEND_API_KEY);
+// Inbox that receives every contact-form submission.
+const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "aissamtaouili39@gmail.com";
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
+// Resend's shared test sender. It works without a verified domain, but can
+// only deliver to the email address that owns the Resend account.
+const FALLBACK_SENDER = "onboarding@resend.dev";
+
+type SendOptions = {
+  fromName: string;
+  to: string[];
+  subject: string;
+  html: string;
+  reply_to?: string;
+};
+
+// Send from SENDER_EMAIL; if Resend rejects that sender (usually because the
+// domain is not verified yet), retry once from Resend's test sender.
+async function sendEmail({ fromName, ...rest }: SendOptions) {
+  const first = await resend.emails.send({
+    from: `${fromName} <${SENDER_EMAIL}>`,
+    ...rest,
+  });
+  if (!first.error || SENDER_EMAIL === FALLBACK_SENDER) return first;
+  console.error(`Send from ${SENDER_EMAIL} failed, retrying from ${FALLBACK_SENDER}:`, first.error);
+  return await resend.emails.send({
+    from: `${fromName} <${FALLBACK_SENDER}>`,
+    ...rest,
+  });
+}
 
 serve(async (req: Request) => {
   const corsHeaders = corsHeadersFor(req);
@@ -51,6 +79,17 @@ serve(async (req: Request) => {
     const phone = body.phone ? escapeHtml(body.phone).slice(0, 30) : null;
     const message = escapeHtml(body.message).slice(0, 5000);
 
+    if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY secret is not set on this Supabase project.");
+      return new Response(
+        JSON.stringify({ error: "Email service is not configured (RESEND_API_KEY missing)." }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500,
+        },
+      );
+    }
+
     // Basic validation
     if (!name || !email || !message) {
       return new Response(
@@ -63,9 +102,8 @@ serve(async (req: Request) => {
     }
 
     try {
-      const { data: userEmailData, error: userEmailError } = await resend.emails
-        .send({
-          from: `Your Company <${SENDER_EMAIL}>`,
+      const { data: userEmailData, error: userEmailError } = await sendEmail({
+          fromName: "CMAN Ltd",
           to: [email],
           subject: "Thank You for Your Message!",
           html: `
@@ -128,11 +166,15 @@ serve(async (req: Request) => {
     } catch (sendError) {
       console.error("Unexpected error during user email send:", sendError);
     }
+    // The notification to your inbox is the email that matters: if it fails,
+    // report the real reason to the page instead of pretending it worked.
+    let adminError: string | null = null;
     try {
-      const { data: adminEmailData, error: adminEmailError } = await resend
-        .emails.send({
-          from: `Contact Form <${SENDER_EMAIL}>`,
+      const { data: adminEmailData, error: adminEmailError } = await sendEmail({
+          fromName: "Contact Form",
           to: [ADMIN_EMAIL],
+          // Hitting "Reply" in your inbox answers the visitor directly.
+          reply_to: String(body.email ?? "").slice(0, 254),
           subject: `New Contact Form Submission from ${name}`,
           html: `
           <div style="background:#f4f8fb;padding:40px 0;">
@@ -185,12 +227,23 @@ serve(async (req: Request) => {
           "Error sending admin notification email:",
           adminEmailError,
         );
-        // Log for debugging
+        adminError = adminEmailError.message || JSON.stringify(adminEmailError);
       } else {
         console.log("Admin notification email sent:", adminEmailData);
       }
     } catch (sendError) {
       console.error("Unexpected error during admin email send:", sendError);
+      adminError = sendError instanceof Error ? sendError.message : String(sendError);
+    }
+
+    if (adminError) {
+      return new Response(
+        JSON.stringify({ error: `Notification email failed: ${adminError}` }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 502,
+        },
+      );
     }
 
     return new Response(

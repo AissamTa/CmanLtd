@@ -85,9 +85,6 @@ function Contact() {
         return;
       }
 
-      setSuccessMessage("Your message has been sent successfully!"); // Use the renamed setter
-      setFormData({ name: "", email: "", phone: "", message: "" }); // Clear form fields on success
-
       // 2. Invoke Supabase Edge Function to send email
       setEmailStatus("Sending confirmation email...");
 
@@ -112,15 +109,19 @@ function Contact() {
         }
       );
 
-      const emailResult = await emailResponse.json();
+      const emailResult = await emailResponse.json().catch(() => ({}));
 
       if (!emailResponse.ok) {
         console.error("Edge Function email error:", emailResult.error);
-        setEmailStatus(
-          `Failed to send email: ${emailResult.error || "Unknown error"}`
-        );
+        setEmailStatus("");
+        setErrors({
+          general:
+            "Your message was saved, but we couldn't send it by email. Please try again or contact us by phone.",
+        });
       } else {
-        setEmailStatus("Confirmation email sent!");
+        setSuccessMessage("Your message has been sent successfully!");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        setEmailStatus("");
       }
     } catch (error) {
       console.error("Overall submission error:", error);
@@ -148,6 +149,11 @@ function Contact() {
               {successMessage && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
                   {successMessage}
+                </div>
+              )}
+              {errors.general && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+                  {errors.general}
                 </div>
               )}
               {/* Error Messages */}
