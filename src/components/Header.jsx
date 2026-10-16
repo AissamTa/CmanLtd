@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo_service from "../assets/logo_service.png";
+import logo from "../assets/logo_cman.png";
 import { Link, useLocation } from "react-router-dom";
 
 const LINKS = [
@@ -18,15 +18,12 @@ export default function Header() {
       <div className="glass glass-sheen max-w-7xl mx-auto rounded-full px-5 sm:px-7">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5">
+          <Link to="/" className="relative z-10 flex items-center gap-2.5">
             <img
-              src={logo_service}
-              alt=""
-              className="w-10 h-10 rounded-full shadow-md"
+              src={logo}
+              alt="CMAN Ltd – Fostering Collaboration"
+              className="h-14 w-auto"
             />
-            <span className="font-display text-xl font-bold text-ink tracking-tight">
-              CMAN <span className="font-medium text-steel">Ltd</span>
-            </span>
           </Link>
 
           {/* Mobile menu button */}
