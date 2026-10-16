@@ -35,13 +35,13 @@ function escapeHtml(value: unknown): string {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const resend = new Resend(RESEND_API_KEY);
-// Inbox that receives every contact-form submission. Fixed on purpose: an old
-// ADMIN_EMAIL secret was overriding it. To change the inbox, edit this line.
-const ADMIN_EMAIL = "aissamtaouili39@gmail.com";
-// Extra inbox that also gets a copy. Sent separately so a failure here never
-// blocks the main notification (Resend test mode only delivers to the account
-// owner until the cman.ma domain is verified).
-const EXTRA_ADMIN_EMAILS = ["cmanltd7@gmail.com"];
+// Main inbox that receives every contact-form submission. Fixed on purpose: an
+// old ADMIN_EMAIL secret was overriding it. To change the inbox, edit this line.
+const ADMIN_EMAIL = "cmanltd7@gmail.com";
+// Backup inbox that also gets a copy. Each inbox is sent separately; the form
+// counts as sent if at least one of them receives it. (Until the cman.ma domain
+// is verified in Resend, only the Resend account owner's address can receive.)
+const EXTRA_ADMIN_EMAILS = ["aissamtaouili39@gmail.com"];
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 // Resend's shared test sender. It works without a verified domain, but can
 // only deliver to the email address that owns the Resend account.
@@ -243,17 +243,22 @@ serve(async (req: Request) => {
       adminError = sendError instanceof Error ? sendError.message : String(sendError);
     }
 
+    let anyCopySent = false;
     for (const extra of EXTRA_ADMIN_EMAILS) {
       try {
         const { error } = await sendAdmin(extra);
         if (error) console.error(`Copy to ${extra} failed:`, error);
-        else console.log(`Copy sent to ${extra}`);
+        else {
+          anyCopySent = true;
+          console.log(`Copy sent to ${extra}`);
+        }
       } catch (e) {
         console.error(`Copy to ${extra} failed:`, e);
       }
     }
 
-    if (adminError) {
+    // Only report failure when no inbox at all received the message.
+    if (adminError && !anyCopySent) {
       return new Response(
         JSON.stringify({ error: `Notification email failed: ${adminError}` }),
         {

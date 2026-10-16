@@ -73,8 +73,8 @@ export default function Footer() {
               </li>
               <li>
                 <i className="fa fa-envelope mr-2" aria-hidden="true"></i>
-                <a href="mailto:cmanltd7@gmail.com" className="hover:underline">
-                  cmanltd7@gmail.com
+                <a href="mailto:contact@cman.ma" className="hover:underline">
+                  contact@cman.ma
                 </a>
               </li>
             </ul>
