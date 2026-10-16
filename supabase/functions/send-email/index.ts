@@ -35,13 +35,15 @@ function escapeHtml(value: unknown): string {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const resend = new Resend(RESEND_API_KEY);
-// Main inbox that receives every contact-form submission. Fixed on purpose: an
-// old ADMIN_EMAIL secret was overriding it. To change the inbox, edit this line.
-const ADMIN_EMAIL = "cmanltd7@gmail.com";
-// Backup inbox that also gets a copy. Each inbox is sent separately; the form
-// counts as sent if at least one of them receives it. (Until the cman.ma domain
-// is verified in Resend, only the Resend account owner's address can receive.)
-const EXTRA_ADMIN_EMAILS = ["aissamtaouili39@gmail.com"];
+// Inboxes that receive every contact-form submission (edit this list to change
+// them). Each is sent separately and the form counts as sent if at least one
+// receives it. Until the cman.ma domain is verified in Resend, only the address
+// that owns the Resend account (RESEND_API_KEY) can actually receive.
+const INBOXES = [
+  "cmanltd7@gmail.com",
+  "abdlghani041@gmail.com",
+  "aissamtaouili39@gmail.com",
+];
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 // Resend's shared test sender. It works without a verified domain, but can
 // only deliver to the email address that owns the Resend account.
@@ -226,39 +228,25 @@ serve(async (req: Request) => {
           `,
         });
 
-    try {
-      const { data: adminEmailData, error: adminEmailError } = await sendAdmin(ADMIN_EMAIL);
-
-      if (adminEmailError) {
-        console.error(
-          "Error sending admin notification email:",
-          adminEmailError,
-        );
-        adminError = adminEmailError.message || JSON.stringify(adminEmailError);
-      } else {
-        console.log("Admin notification email sent:", adminEmailData);
-      }
-    } catch (sendError) {
-      console.error("Unexpected error during admin email send:", sendError);
-      adminError = sendError instanceof Error ? sendError.message : String(sendError);
-    }
-
-    let anyCopySent = false;
-    for (const extra of EXTRA_ADMIN_EMAILS) {
+    let delivered = 0;
+    for (const inbox of INBOXES) {
       try {
-        const { error } = await sendAdmin(extra);
-        if (error) console.error(`Copy to ${extra} failed:`, error);
-        else {
-          anyCopySent = true;
-          console.log(`Copy sent to ${extra}`);
+        const { error } = await sendAdmin(inbox);
+        if (error) {
+          console.error(`Notification to ${inbox} failed:`, error);
+          adminError = error.message || JSON.stringify(error);
+        } else {
+          delivered++;
+          console.log(`Notification sent to ${inbox}`);
         }
       } catch (e) {
-        console.error(`Copy to ${extra} failed:`, e);
+        console.error(`Notification to ${inbox} failed:`, e);
+        adminError = e instanceof Error ? e.message : String(e);
       }
     }
 
     // Only report failure when no inbox at all received the message.
-    if (adminError && !anyCopySent) {
+    if (delivered === 0) {
       return new Response(
         JSON.stringify({ error: `Notification email failed: ${adminError}` }),
         {
