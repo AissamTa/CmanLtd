@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+// Wording taken from the CMAN Ltd company presentation.
 const PANELS = [
-  { code: "CM-01", label: "Installation", metric: "Line efficiency", value: "98.2%" },
-  { code: "CM-02", label: "Training", metric: "Operators certified", value: "Level 3" },
-  { code: "CM-03", label: "Process", metric: "Takt time", value: "-18%" },
+  { code: "CM-01", label: "Industrial Solutions", metric: "We deliver", value: "Design · Manufacture" },
+  { code: "CM-02", label: "Technical Services", metric: "On site", value: "Installation · Maintenance" },
+  { code: "CM-03", label: "Value Added", metric: "For your plant", value: "Sustainable results" },
 ];
 
 export default function Banner() {
@@ -40,17 +41,16 @@ export default function Banner() {
         {/* Copy */}
         <div>
           <p className="plate mb-5">
-            Collaboration in Manufacturing · Tangier, MA
+            Industrial Solutions &amp; Technical Services · Tangier, MA
           </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight">
-            Production lines,
+            Fostering
             <br />
-            engineered to{" "}
-            <span className="text-signal">flow.</span>
+            <span className="text-signal">collaboration.</span>
           </h1>
           <p className="mt-6 text-lg text-steel max-w-md leading-relaxed">
-            CMAN Ltd installs, optimizes and staffs manufacturing lines —
-            partnering with plants to turn capacity into output.
+            Your partner for a more efficient and competitive industry —
+            from design and manufacture to installation and maintenance.
           </p>
           <div className="mt-9 flex flex-wrap gap-4">
             <Link
@@ -81,7 +81,7 @@ export default function Banner() {
         {/* 3D glass panel stack */}
         <div className="scene hidden sm:block" aria-hidden="true">
           <div
-            className="scene-group relative h-[420px]"
+            className="scene-group relative h-[440px]"
             style={{
               transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
             }}
@@ -91,10 +91,10 @@ export default function Banner() {
                 key={p.code}
                 className={`card-3d absolute ${
                   i === 0
-                    ? "top-10 left-1/2 -ml-32 z-30 float-slow"
+                    ? "top-0 left-1/2 -ml-32 z-30 float-slow"
                     : i === 1
-                    ? "top-40 left-6 z-20 float-slower"
-                    : "top-56 right-2 z-10 float-slow"
+                    ? "top-48 left-6 z-20 float-slower"
+                    : "top-60 right-2 z-10 float-slow"
                 }`}
               >
                 <div
@@ -108,7 +108,7 @@ export default function Banner() {
                   <h3 className="mt-3 text-xl font-semibold">{p.label}</h3>
                   <div className="mt-5 pt-4 border-t border-ink/10">
                     <p className="plate">{p.metric}</p>
-                    <p className="font-mono text-2xl font-semibold text-ink mt-1">
+                    <p className="text-lg font-semibold text-ink mt-1">
                       {p.value}
                     </p>
                   </div>
@@ -122,7 +122,7 @@ export default function Banner() {
       {/* Service index strip */}
       <div className="relative border-t border-ink/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap gap-x-10 gap-y-2">
-          {["01 Installation", "02 Training", "03 Process", "04 Recruitment"].map(
+          {["01 Design", "02 Manufacture", "03 Installation", "04 Maintenance"].map(
             (s) => (
               <span key={s} className="plate">
                 {s}
