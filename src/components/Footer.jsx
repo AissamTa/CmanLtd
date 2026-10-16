@@ -77,6 +77,16 @@ export default function Footer() {
                   contact@cman.ma
                 </a>
               </li>
+              <li>
+                <i className="fa fa-file-pdf-o mr-2" aria-hidden="true"></i>
+                <a
+                  href="/CMAN_Ltd_presentation.pdf"
+                  download="CMAN_Ltd_presentation.pdf"
+                  className="hover:underline"
+                >
+                  Company presentation (PDF)
+                </a>
+              </li>
             </ul>
           </div>
 

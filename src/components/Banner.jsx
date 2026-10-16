@@ -65,6 +65,16 @@ export default function Banner() {
             >
               Explore services
             </Link>
+            <a
+              href="/CMAN_Ltd_presentation.pdf"
+              download="CMAN_Ltd_presentation.pdf"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-ink/20 font-semibold text-ink hover:bg-white/70 transition"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16" />
+              </svg>
+              Download our presentation (PDF)
+            </a>
           </div>
         </div>
 
