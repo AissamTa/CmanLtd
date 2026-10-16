@@ -41,8 +41,6 @@ const resend = new Resend(RESEND_API_KEY);
 // that owns the Resend account (RESEND_API_KEY) can actually receive.
 const INBOXES = [
   "cmanltd7@gmail.com",
-  "abdlghani041@gmail.com",
-  "aissamtaouili39@gmail.com",
 ];
 const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "contact@cman.ma";
 // Resend's shared test sender. It works without a verified domain, but can
